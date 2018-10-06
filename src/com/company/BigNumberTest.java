@@ -12,9 +12,8 @@ class BigNumberTest {
 
     @BeforeEach
     void setUp() {
-        int base = 10;
-        String str = "123456789";
-        num = new BigNumber(str, base);
+        String str = "95";
+        num = new BigNumber(str);
     }
 
     @AfterEach
@@ -24,5 +23,11 @@ class BigNumberTest {
     @Test
     void printBigNumber() {
         num.printBigNumber();
+    }
+
+    @Test
+    void add() {
+        BigNumber m = num.add(num);
+        m.printBigNumber();
     }
 }
