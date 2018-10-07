@@ -12,7 +12,7 @@ class BigNumberTest {
 
     @BeforeEach
     void setUp() {
-        String str = "95";
+        String str = "05";
         num = new BigNumber(str);
     }
 
@@ -29,5 +29,12 @@ class BigNumberTest {
     void add() {
         BigNumber m = num.add(num);
         m.printBigNumber();
+    }
+
+    @Test
+    void negate() {
+        BigNumber num2 = new BigNumber("05");
+        BigNumber m = num.negate();
+        m.add(num2).printBigNumber();
     }
 }

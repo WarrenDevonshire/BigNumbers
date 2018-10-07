@@ -1,7 +1,9 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class BigNumber {
 
@@ -48,6 +50,73 @@ public class BigNumber {
             System.out.print(bigNumber[i]);
         }
         System.out.println();
+    }
+
+    public BigNumber negate(){
+        int b = base - 1;
+        for(int i : bigNumber){
+            i = b - i;
+        }
+
+        return this.add(new BigNumber("01"));
+
+    }
+
+    public static String convertToTensCompliment(String signedNumber){
+        int[] compliment;
+        if(signedNumber.charAt(0) == '-'){
+            compliment = new int[signedNumber.length()];
+            compliment[0] = 9;
+            for(int i = 1; i < signedNumber.length(); i++){
+                compliment[i] = 9 - Integer.parseInt(String.valueOf(signedNumber.charAt(i)));
+            }
+
+        }else{
+            compliment = new int[signedNumber.length() + 1];
+            compliment[0] = 0;
+            for(int i = 0; i < signedNumber.length(); i++){
+                compliment[i + 1] = Integer.parseInt(String.valueOf(signedNumber.charAt(i)));
+            }
+        }
+        return compliment.toString();
+    }
+
+    //Compliment Arrays are little Endian
+    private int[] convertStringToComplimentArray(String in) throws IllegalArgumentException{
+        if(in.length() == 0) throw new IllegalArgumentException("String length cannot be zero");
+
+        int[] compliment;
+        if(in.charAt(0) == '-'){
+            compliment = new int[in.length()];
+            compliment[0] = 9;
+            for(int i = 1; i < in.length(); i++){
+                try{
+                    compliment[i] = 9 - Integer.parseInt(String.valueOf(in.charAt(i)));
+                }catch(Exception e){
+                    throw new IllegalArgumentException();
+                }
+            }
+        }else if(Character.isDigit(in.charAt(0))){
+            compliment = new int[in.length() + 1];
+            compliment[0] = 0;
+            for(int i = 0; i < in.length(); i++){
+                try{
+                    compliment[i + 1] = 9 - Integer.parseInt(String.valueOf(in.charAt(i)));
+                }catch(Exception e){
+                    throw new IllegalArgumentException();
+                }
+            }
+        }else{
+            throw new IllegalArgumentException();
+        }
+
+        for(int i = 0; i < compliment.length / 2; i++){
+            int temp = compliment[i];
+            compliment[i] = compliment[compliment.length - i - 1];
+            compliment[compliment.length - i - 1] = temp;
+        }
+
+        return compliment;
     }
 
 //    public BigNumber add(BigNumber number){
