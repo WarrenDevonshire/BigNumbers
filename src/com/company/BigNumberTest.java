@@ -29,6 +29,7 @@ class BigNumberTest {
     void add() {
 
         BigNumber m = num.add(num);
+
         m.printBigNumber();
     }
 

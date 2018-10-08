@@ -14,23 +14,31 @@ public class BigNumber {
         this.size = bigNumber.length;
     }
 
+    private BigNumber(int[] number){
+        bigNumber = number;
+        size = bigNumber.length;
+    }
+
+    private void removeLeadingZeroes(){
+
+    }
+
 
 
     public BigNumber add(BigNumber num){
-        int k =0; int j = 0;//need to check if sizes are equal.
+        int k =0;//need to check if sizes are equal.
         int[] m = new int[this.size + 1];
-        for(; j < this.size; j++){
+        for(int j = 0; j < this.size; j++){
             m[j] = (this.bigNumber[j] + num.bigNumber[j] + k) % this.base;
             k = (this.bigNumber[j] + num.bigNumber[j]) / this.base;
         }
-
-        if(m[m.length - 2] == 9){
+        if(k == 1){
             m[m.length - 1] = 9;
         }else{
             m[m.length - 1] = 0;
         }
 
-        return new BigNumber(Arrays.toString(m).replaceAll("\\[|\\]|,|\\s", ""));
+        return new BigNumber(m);
     }
 
     public void printBigNumber(){
