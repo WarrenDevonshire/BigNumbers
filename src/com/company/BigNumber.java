@@ -70,7 +70,7 @@ public class BigNumber {
             compliment[0] = 0;
             for(int i = 0; i < in.length(); i++){
                 try{
-                    compliment[i + 1] = 9 - Integer.parseInt(String.valueOf(in.charAt(i)));
+                    compliment[i + 1] = Integer.parseInt(String.valueOf(in.charAt(i)));
                 }catch(Exception e){
                     throw new IllegalArgumentException();
                 }
