@@ -5,30 +5,59 @@ import java.util.Arrays;
 
 public class BigNumber {
 
-    public int[] bigNumber;
+    private int[] bigNumber;
     private int base = 10;
-    private int size;
 
     public BigNumber(String number)throws IllegalArgumentException{
         bigNumber = convertStringToComplimentArray(number);
-        this.size = bigNumber.length;
+        normalize();
     }
 
     private BigNumber(int[] number){
         bigNumber = number;
-        size = bigNumber.length;
+        normalize();
     }
 
-    private void removeLeadingZeroes(){
-
+    private void normalize(){
+        int sign = bigNumber[bigNumber.length - 1];
+        int counter = 0; //counts how many indexes to shave off
+        for(int i = bigNumber.length - 1; i >= 2; i--){
+            if(bigNumber[i] == sign && bigNumber[i-1] == sign){
+                counter++;
+            }
+        }
+        int[] temp = new int[bigNumber.length - counter];
+        for(int i = 0; i < temp.length; i++){
+            temp[i] = bigNumber[i];
+        }
+        bigNumber = temp;
     }
 
+    //Used to grow a bigNumber array filling new indexes with the sign.
+    //Used in order to make sums the same length. //fix this comment.
+    private void normalize(int toSize){
+        int[] temp = new int[toSize];
+        int sign = bigNumber[bigNumber.length - 1];
+        for(int i = 0; i < bigNumber.length; i++){
+            temp[i] = bigNumber[i];
+        }
+        for(int i = temp.length - bigNumber.length + 1; i < temp.length; i++){
+            temp[i] = sign;
+        }
+        bigNumber = temp;
+    }
 
 
     public BigNumber add(BigNumber num){
+        if(bigNumber.length > num.bigNumber.length){
+            num.normalize(bigNumber.length);
+        }else if (bigNumber.length < num.bigNumber.length){
+            normalize(num.bigNumber.length);
+        }
+
         int k =0;//need to check if sizes are equal.
-        int[] m = new int[this.size + 1];
-        for(int j = 0; j < this.size; j++){
+        int[] m = new int[this.bigNumber.length + 1];
+        for(int j = 0; j < this.bigNumber.length; j++){
             m[j] = (this.bigNumber[j] + num.bigNumber[j] + k) % this.base;
             k = (this.bigNumber[j] + num.bigNumber[j]) / this.base;
         }
@@ -37,7 +66,6 @@ public class BigNumber {
         }else{
             m[m.length - 1] = 0;
         }
-
         return new BigNumber(m);
     }
 
@@ -49,13 +77,25 @@ public class BigNumber {
     }
 
     public BigNumber negate(){
+        BigNumber m = new BigNumber(bigNumber.clone());
         int b = base - 1;
-        for(int i : bigNumber){
-            i = b - i;
+        for(int i = 0; i < m.bigNumber.length; i++){
+            m.bigNumber[i] = b - m.bigNumber[i];
         }
+        return m.addOne();
+    }
 
-        return this.add(new BigNumber("01"));
-
+    //negate helper function.
+    private BigNumber addOne(){
+        int k =0;//need to check if sizes are equal.
+        int[] m = new int[bigNumber.length];
+        m[0] = (bigNumber[0] + 1) % base;
+        k = (bigNumber[0] + 1) / base;
+        for(int j = 1; j < bigNumber.length; j++){
+            m[j] = (bigNumber[j] + k) % base;
+            k = (bigNumber[j] + 1) / base;
+        }
+        return new BigNumber(m);
     }
 
     //Compliment Arrays are little Endian
@@ -98,32 +138,20 @@ public class BigNumber {
         return compliment;
     }
 
-//    public BigNumber add(BigNumber number){
-//        int j = 0; //loop index
-//        int k = 0; //keeps track of carries
-//
-//        BigNumber result = new BigNumber();
-//
-//    }
-//
-//    public BigNumber subtract(BigNumber number){
-//
-//    }
-//
-//    public BigNumber multiply(BigNumber number){
-//
-//    }
-//
-//    public BigNumber divide(BigNumber number){
-//
-//    }
-//
-//    public BigNumber negate(){
-//
-//    }
-//
-//    public int sign(){
-//
-//    }
+    public int[] getBigNumber() {
+        return bigNumber;
+    }
+
+    public void setBigNumber(int[] bigNumber) {
+        this.bigNumber = bigNumber;
+    }
+
+
+
+    public BigNumber subtract(BigNumber number){
+        BigNumber negatedNumber = number.negate();
+        return add(negatedNumber);
+    }
+
 
 }
