@@ -28,26 +28,63 @@ public class BigNumber {
                 counter = 0;
             }
         }
-        int[] temp = new int[bigNumber.length - counter];
-        for(int i = 0; i < temp.length; i++){
+        if(counter == 0){//array is already normalized.
+            return;
+        }else{
+            int[] temp = new int[bigNumber.length - counter];
+            for(int i = 0; i < temp.length; i++){
+                temp[i] = bigNumber[i];
+            }
+            bigNumber = temp;
+        }
+    }
+    //Used to grow a bigNumber array filling new indexes with the sign.
+    //Used in order to make sums the same length. //fix this comment.
+    private void normalize(int toSize){
+        int[] temp = new int[toSize];
+        int sign = bigNumber[bigNumber.length - 1];
+        for(int i = 0; i < bigNumber.length; i++){
             temp[i] = bigNumber[i];
+        }
+        for(int i = temp.length - bigNumber.length + 1; i < temp.length; i++){
+            temp[i] = sign;
         }
         bigNumber = temp;
     }
-//
-//    //Used to grow a bigNumber array filling new indexes with the sign.
-//    //Used in order to make sums the same length. //fix this comment.
-//    private void normalize(int toSize){
-//        int[] temp = new int[toSize];
-//        int sign = bigNumber[bigNumber.length - 1];
-//        for(int i = 0; i < bigNumber.length; i++){
-//            temp[i] = bigNumber[i];
-//        }
-//        for(int i = temp.length - bigNumber.length + 1; i < temp.length; i++){
-//            temp[i] = sign;
-//        }
-//        bigNumber = temp;
-//    }
+
+    public BigNumber add(BigNumber number){
+        int[] sum;
+        int k; //carry value
+        if(negative && number.negative){
+
+        }else if(negative && !number.negative){
+
+        }else if(!negative && number.negative){
+
+        }else{
+
+        }
+    }
+    //returns the 10s compliment representation of number
+    public BigNumber negate(BigNumber number){
+        int[] compliment = number.bigNumber.clone();
+        int k = 0; //carry
+        for(int i = 0; i < compliment.length; i++){
+            compliment[i] = (base - 1) - number.bigNumber[i];
+        }
+        int temp = compliment[0] + 1;
+        compliment[0] = (temp) % base;
+        k = temp / base;
+        for(int i = 1; i < compliment.length; i++){
+            temp = compliment[i] + k;
+            compliment[i] = temp % base;
+            k = temp / base;
+        }//The last carry is thrown away.
+        return new BigNumber(compliment);
+    }
+
+
+
 
 
 //    public BigNumber add(BigNumber num){
@@ -70,6 +107,8 @@ public class BigNumber {
 //        }
 //        return new BigNumber(m);
 //    }
+
+
 
 //    public BigNumber add(BigNumber number){
 //        int k = 0; //carry value
@@ -103,28 +142,28 @@ public class BigNumber {
         }
         System.out.println();
     }
+//
+//    public BigNumber negate(){
+//        BigNumber m = new BigNumber(bigNumber.clone());
+//        int b = base - 1;
+//        for(int i = 0; i < m.bigNumber.length; i++){
+//            m.bigNumber[i] = b - m.bigNumber[i];
+//        }
+//        return m.addOne();
+//    }
 
-    public BigNumber negate(){
-        BigNumber m = new BigNumber(bigNumber.clone());
-        int b = base - 1;
-        for(int i = 0; i < m.bigNumber.length; i++){
-            m.bigNumber[i] = b - m.bigNumber[i];
-        }
-        return m.addOne();
-    }
-
-    //negate helper function.
-    private BigNumber addOne(){
-        int k =0;//need to check if sizes are equal.
-        int[] m = new int[bigNumber.length];
-        m[0] = (bigNumber[0] + 1) % base;
-        k = (bigNumber[0] + 1) / base;
-        for(int j = 1; j < bigNumber.length; j++){
-            m[j] = (bigNumber[j] + k) % base;
-            k = (bigNumber[j] + 1) / base;
-        }
-        return new BigNumber(m);
-    }
+//    //negate helper function.
+//    private BigNumber addOne(){
+//        int k =0;//need to check if sizes are equal.
+//        int[] m = new int[bigNumber.length];
+//        m[0] = (bigNumber[0] + 1) % base;
+//        k = (bigNumber[0] + 1) / base;
+//        for(int j = 1; j < bigNumber.length; j++){
+//            m[j] = (bigNumber[j] + k) % base;
+//            k = (bigNumber[j] + 1) / base;
+//        }
+//        return new BigNumber(m);
+//    }
 
     //Compliment Arrays are little Endian
     private int[] convertStringToComplimentArray(String in) throws IllegalArgumentException{
@@ -165,14 +204,14 @@ public class BigNumber {
         return compliment;
     }
 
-    public int[] getBigNumber() {
-        return bigNumber;
-    }
-
-    public void setBigNumber(int[] bigNumber) {
-        this.bigNumber = bigNumber;
-    }
-
+//    @Override
+//    public String toString() {//use a stringBuilder
+//        if(negative){
+//            return "-" + Arrays.toString(bigNumber).replaceAll("/[|/]|,", "");
+//        }else{
+//            return Arrays.toString(bigNumber).replaceAll("/[|/]|,", "");
+//        }
+//    }
 
 
 //    public BigNumber subtract(BigNumber number){
