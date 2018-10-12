@@ -41,7 +41,7 @@ public class BigNumber {
             magnitude = new int[input.length() - 1];
             for(int i = 1; i < input.length(); i++){
                 try{//attempt to parse input string values into number array.
-                    magnitude[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+                    magnitude[i - 1] = Integer.parseInt(String.valueOf(input.charAt(i)));
                 }catch(Exception e){
                     throw new IllegalArgumentException("String contains invalid character");
                 }
@@ -107,7 +107,7 @@ public class BigNumber {
         }else if(z == -1){//operand1 is less than operand2 so, operand2 - operand1 = sum
             return new BigNumber(subtract(operand2,operand1), number.negative);//sum is the sign of the larger number
         }else{
-            return new BigNumber("0");//numbers are opposite sign but equal magnitude
+            return new BigNumber("0", false);//numbers are opposite sign but equal magnitude
         }
     }
 
@@ -131,8 +131,8 @@ public class BigNumber {
         int[] sum = new int[operand1.length];
 
         for(int i = 0; i < operand1.length; i++){
-            sum[i] = (operand1[i] - operand2[i] + k) % base;
-            k = (operand1[i] - operand2[i] + k) / base;
+            sum[i] = (operand1[i] - operand2[i] + k + base) % base;
+            k = (operand1[i] - operand2[i] + k) < 0 ? -1 : 0;
         }
 
         return sum;
@@ -182,5 +182,10 @@ public class BigNumber {
             temp[i] = number[i];
         }//remaining indexes in temp are zero by default.
         return temp;
+    }
+
+    //returns ~this
+    public BigNumber negate(){
+        return new BigNumber(magnitude, !negative);
     }
 }
