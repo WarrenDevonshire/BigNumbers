@@ -1,27 +1,30 @@
 package com.company;
 
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.math.BigInteger;
 
 public class BigNumber {
 
-    private int[] number;
+    private int[] magnitude;
     private static int base = 10;
     private boolean negative;//sign is true when positive, false when negative
 
     public BigNumber(String baseTenNumber)throws IllegalArgumentException{
-        number = processInput(baseTenNumber);
+        magnitude = processInput(baseTenNumber);
         normalize();
     }
 
     public BigNumber(String baseTenNumber, boolean negative)throws IllegalArgumentException{
-        number = processInput(baseTenNumber);
+        magnitude = processInput(baseTenNumber);
         this.negative = negative;
         normalize();
     }
 
-    private BigNumber(int[] number, boolean negative){
-        this.number = number;
+    private BigNumber(int[] magnitude, boolean negative){
+        this.magnitude = magnitude;
         this.negative = negative;
         normalize();
     }
@@ -31,24 +34,24 @@ public class BigNumber {
     //checks that string is a signed decimal number. throws IllegalArgumentException otherwise.
     private int[] processInput(@NotNull String input)throws IllegalArgumentException{
         if(input.length() == 0) throw new IllegalArgumentException("String length cannot be zero");
-        int[] number; //array to be returned.
+        int[] magnitude; //array to be returned.
         //check to see if input is negative
         if(input.charAt(0) == '-'){
             negative = true; //if negative set sign to false
-            number = new int[input.length() - 1];
+            magnitude = new int[input.length() - 1];
             for(int i = 1; i < input.length(); i++){
                 try{//attempt to parse input string values into number array.
-                    number[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+                    magnitude[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
                 }catch(Exception e){
                     throw new IllegalArgumentException("String contains invalid character");
                 }
             }
         }else if(Character.isDigit(input.charAt(0))){
             negative = false; //no negative sign detected so sign is set to positive.
-            number = new int[input.length()];
+            magnitude = new int[input.length()];
             for(int i = 0; i < input.length(); i++){
                 try{//attempt to parse input string values into number array.
-                    number[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+                    magnitude[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
                 }catch(Exception e){
                     throw new IllegalArgumentException("String contains invalid character");
                 }
@@ -59,41 +62,57 @@ public class BigNumber {
 
         //reversing array so least significant digit is first.
         //this allows the array to be traversed forward when adding.
-        for(int i = 0; i < number.length / 2; i++){
-            int temp = number[i];
-            number[i] = number[number.length - i - 1];
-            number[number.length - i - 1] = temp;
+        for(int i = 0; i < magnitude.length / 2; i++){
+            int temp = magnitude[i];
+            magnitude[i] = magnitude[magnitude.length - i - 1];
+            magnitude[magnitude.length - i - 1] = temp;
         }
 
-        return number;
+        return magnitude;
     }
 
     @Override
     public String toString(){
         StringBuilder str;
         if(negative){
-            str = new StringBuilder(number.length + 1);
+            str = new StringBuilder(magnitude.length + 1);
             str.append('-');
         }else{
-            str = new StringBuilder(number.length);
+            str = new StringBuilder(magnitude.length);
         }
-        for(int i = number.length - 1; i > 0; i--){
-            str.append(number[i]);
+        for(int i = magnitude.length - 1; i >= 0; i--){
+            str.append(magnitude[i]);
         }
         return str.toString();
     }
 
-    public BigNumber add(@NotNull BigNumber bigNumber){
-        int[] operand1, operand2; //the two things being added.
-        //first thing to do:
-        //make arrays equal length.
+    public BigNumber add(@NotNull BigNumber number){
+        int[] operand1 = this.magnitude; //renaming for clarity
+        int[] operand2 = number.magnitude; //renaming for clarity
+        //make arrays equal length
+        if(operand1.length > operand2.length){
+            operand2 = normalize(operand2, operand1.length);//pad operand2 with zeroes
+        }else if(operand1.length < operand2.length){
+            operand1 = normalize(operand1, operand2.length);//pad operand1 with zeroes
+        }
 
+        if(this.negative == number.negative) {//signs are equal so just add.
+            return new BigNumber(add(operand1, operand2), this.negative);
+        }
 
-
+        //signs are different, so need to find greater number and use subtraction instead.
+        int z = findGreaterNumber(operand1, operand2);//determining if operands are of equal length.
+        if(z == 1){//operand1 is greater than operand2, so operand1 - operand2 = sum
+            return new BigNumber(subtract(operand1,operand2), this.negative);//sum is the sign of the larger number
+        }else if(z == -1){//operand1 is less than operand2 so, operand2 - operand1 = sum
+            return new BigNumber(subtract(operand2,operand1), number.negative);//sum is the sign of the larger number
+        }else{
+            return new BigNumber("0");//numbers are opposite sign but equal magnitude
+        }
     }
 
     //assumes operands are same length
-    private int[] add(int[] operand1, int[] operand2){
+    private int[] add(@NotNull int[] operand1, @NotNull int[] operand2){
         int k = 0; //k is the carry digit.
         int[] sum = new int[operand1.length + 1];
 
@@ -107,7 +126,7 @@ public class BigNumber {
     }
 
     //assume operand1 >= operand2
-    private int[] subtract(int[] operand1, int[] operand2){
+    private int[] subtract(@NotNull int[] operand1,@NotNull int[] operand2){
         int k = 0;
         int[] sum = new int[operand1.length];
 
@@ -138,21 +157,21 @@ public class BigNumber {
 
     private void normalize(){
         int counter = 0;
-        for(int i = number.length - 1; i >=0; i--) {
-            if (number[i] == 0) {
+        for(int i = magnitude.length - 1; i > 0; i--) {
+            if (magnitude[i] == 0) {
                 counter++;
             } else {
-                counter = 0;
+                break;
             }
         }
         if(counter == 0){//array is already normalized.
             return;
         }else{
-            int[] temp = new int[number.length - counter];
+            int[] temp = new int[magnitude.length - counter];
             for(int i = 0; i < temp.length; i++){//copy only relevant values from number.
-                temp[i] = number[i];
+                temp[i] = magnitude[i];
             }
-            number = temp;
+            magnitude = temp;
         }
     }
 
