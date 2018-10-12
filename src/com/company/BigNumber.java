@@ -38,39 +38,58 @@ public class BigNumber {
             bigNumber = temp;
         }
     }
+
     //Used to grow a bigNumber array filling new indexes with the sign.
     //Used in order to make sums the same length. //fix this comment.
-    private void normalize(int toSize){
+    private int[] normalize(int toSize)throws IllegalArgumentException{
+        if(bigNumber.length == toSize){
+            return;
+        }
+        if(bigNumber.length > toSize){
+            throw new IllegalArgumentException();
+        }
         int[] temp = new int[toSize];
-        int sign = bigNumber[bigNumber.length - 1];
         for(int i = 0; i < bigNumber.length; i++){
             temp[i] = bigNumber[i];
         }
         for(int i = temp.length - bigNumber.length + 1; i < temp.length; i++){
-            temp[i] = sign;
+            temp[i] = 0;
         }
-        bigNumber = temp;
-    }
+        return temp;
+    }//might not need this function
 
     public BigNumber add(BigNumber number){
         int[] sum;
         int k; //carry value
+        int[] operand1;
+        int[] operand2;
+        if(bigNumber.length > number.bigNumber.length){
+            operand2 = normalize();
+        }
         if(negative && number.negative){
-
+            operand1 = negate(operand1);
+            operand2 = negate(operand2);
         }else if(negative && !number.negative){
-
+            operand1 = negate(operand1);
         }else if(!negative && number.negative){
-
+            operand1 = bigNumber;
+            operand2 = negate(operand2);
         }else{
 
         }
+        return new BigNumber(add(operand1,operand2));
     }
+
+    private int[] add(int[] operand1, int[] operand2){
+
+    }
+
     //returns the 10s compliment representation of number
-    public BigNumber negate(BigNumber number){
-        int[] compliment = number.bigNumber.clone();
+    private int[] negate(int [] number){
+        int[] compliment = number;
         int k = 0; //carry
         for(int i = 0; i < compliment.length; i++){
-            compliment[i] = (base - 1) - number.bigNumber[i];
+            compliment[i] = (base - 1) - compliment[i];
         }
         int temp = compliment[0] + 1;
         compliment[0] = (temp) % base;
@@ -80,7 +99,7 @@ public class BigNumber {
             compliment[i] = temp % base;
             k = temp / base;
         }//The last carry is thrown away.
-        return new BigNumber(compliment);
+        return compliment;
     }
 
 
