@@ -1,10 +1,6 @@
 package com.company;
 
-
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.math.BigInteger;
 
 public class BigNumber {
 
@@ -12,17 +8,33 @@ public class BigNumber {
     private static int base = 10;
     private boolean negative;//sign is true when positive, false when negative
 
+    /**
+     *
+     * @param baseTenNumber
+     * @throws IllegalArgumentException
+     */
     public BigNumber(String baseTenNumber)throws IllegalArgumentException{
         magnitude = processInput(baseTenNumber);
         normalize();
     }
 
+    /**
+     *
+     * @param baseTenNumber
+     * @param negative
+     * @throws IllegalArgumentException
+     */
     public BigNumber(String baseTenNumber, boolean negative)throws IllegalArgumentException{
         magnitude = processInput(baseTenNumber);
         this.negative = negative;
         normalize();
     }
 
+    /**
+     *
+     * @param magnitude
+     * @param negative
+     */
     private BigNumber(int[] magnitude, boolean negative){
         this.magnitude = magnitude;
         this.negative = negative;
@@ -32,6 +44,12 @@ public class BigNumber {
     //helper function for constructor.
     //takes string input and returns an array of int.
     //checks that string is a signed decimal number. throws IllegalArgumentException otherwise.
+    /**
+     *
+     * @param input
+     * @return
+     * @throws IllegalArgumentException
+     */
     private int[] processInput(@NotNull String input)throws IllegalArgumentException{
         if(input.length() == 0) throw new IllegalArgumentException("String length cannot be zero");
         int[] magnitude; //array to be returned.
@@ -71,6 +89,10 @@ public class BigNumber {
         return magnitude;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString(){
         StringBuilder str;
@@ -86,6 +108,11 @@ public class BigNumber {
         return str.toString();
     }
 
+    /**
+     *
+     * @param number
+     * @return
+     */
     public BigNumber add(@NotNull BigNumber number){
         int[] operand1 = this.magnitude; //renaming for clarity
         int[] operand2 = number.magnitude; //renaming for clarity
@@ -112,6 +139,12 @@ public class BigNumber {
     }
 
     //assumes operands are same length
+    /**
+     *
+     * @param operand1
+     * @param operand2
+     * @return
+     */
     private int[] add(@NotNull int[] operand1, @NotNull int[] operand2){
         int k = 0; //k is the carry digit.
         int[] sum = new int[operand1.length + 1];
@@ -126,6 +159,12 @@ public class BigNumber {
     }
 
     //assume operand1 >= operand2
+    /**
+     *
+     * @param operand1
+     * @param operand2
+     * @return
+     */
     private int[] subtract(@NotNull int[] operand1,@NotNull int[] operand2){
         int k = 0;
         int[] sum = new int[operand1.length];
@@ -142,6 +181,12 @@ public class BigNumber {
     //if equal return 0.
     //if parameter 1 is greater than parameter 2 return 1.
     //assumes numbers are same length.
+    /**
+     *
+     * @param p1
+     * @param p2
+     * @return
+     */
     private int findGreaterNumber(int[] p1, int[] p2){
         for(int i = p1.length - 1; i >= 0; i--){
             if(p1[i] > p2[i]){
@@ -155,6 +200,9 @@ public class BigNumber {
         return 0;//numbers are equal
     }
 
+    /**
+     *
+     */
     private void normalize(){
         int counter = 0;
         for(int i = magnitude.length - 1; i > 0; i--) {
@@ -176,6 +224,12 @@ public class BigNumber {
     }
 
     //assumes number is less than toSize
+    /**
+     *
+     * @param number
+     * @param toSize
+     * @return
+     */
     private int[] normalize(int[] number, int toSize){
         int[] temp = new int[toSize];
         for(int i = 0; i < number.length; i++){
@@ -185,6 +239,10 @@ public class BigNumber {
     }
 
     //returns ~this
+    /**
+     *
+     * @return
+     */
     public BigNumber negate(){
         return new BigNumber(magnitude, !negative);
     }
