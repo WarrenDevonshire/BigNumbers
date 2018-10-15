@@ -16,6 +16,11 @@ public class BigNumber {
     public BigNumber(String baseTenNumber)throws IllegalArgumentException{
         magnitude = processInput(baseTenNumber);
         normalize();
+        if(magnitude.length == 1){
+            if(magnitude[0] == 0){
+                this.negative = false;
+            }
+        }
     }
 
     /**
@@ -28,6 +33,11 @@ public class BigNumber {
         magnitude = processInput(baseTenNumber);
         this.negative = negative;
         normalize();
+        if(magnitude.length == 1){
+            if(magnitude[0] == 0){
+                this.negative = false;
+            }
+        }
     }
 
     /**
@@ -39,6 +49,11 @@ public class BigNumber {
         this.magnitude = magnitude;
         this.negative = negative;
         normalize();
+        if(magnitude.length == 1){
+            if(magnitude[0] == 0){
+                this.negative = false;
+            }
+        }
     }
 
     //helper function for constructor.
