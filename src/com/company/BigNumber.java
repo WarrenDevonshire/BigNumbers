@@ -421,6 +421,8 @@ public class BigNumber {
      */
     public BigNumber multiply(BigNumber factor) {
 
+        //TODO: Update algorithm to Knuth one
+
         BigNumber temp = new BigNumber("0");
 
         //if multiplying by 0, return 0
@@ -476,6 +478,7 @@ public class BigNumber {
     public BigNumberPair divide(BigNumber divisor) throws IllegalArgumentException {
 
         //TODO: STILL NEED TO HANDLE DIVIDING BY A NEGATIVE NUMBER
+        //TODO: Update algorithm to Knuth one
 
         BigNumberPair result = new BigNumberPair();
         BigNumber temp = new BigNumber("0", false);
@@ -565,7 +568,7 @@ public class BigNumber {
 
         } else {
 
-            //use Knuth algorithm if odd
+            
 
         }
 
