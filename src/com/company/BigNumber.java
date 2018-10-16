@@ -239,69 +239,41 @@ public class BigNumber {
      * @return
      */
     public BigNumber negate() {
+
         return new BigNumber(magnitude, !negative);
+
     }
 
 
     /**
+     * A function to check the invoker for equality against a second BigNumber.
      * @param number the BigNumber to be checked for equality against the invoker
      * @return a boolean value representing whether or not the invoker and argument are equal
      * @author Daniel Haluszka
      */
     public boolean equals(BigNumber number) {
 
-        //check that the signs are the same before doing any more work
-        if (this.negative != number.negative) {
+        if (this.compareTo(number) == 0) {
+
+            return true;
+
+        } else {
 
             return false;
 
         }
 
-        //rename for clarity
-        int[] operand1 = this.magnitude;
-        int[] operand2 = number.magnitude;
-
-        /**
-         * Should put this padding check block in a function
-         */
-        //if the two BigNumbers being compared are not the same size, pad the shorter of the two
-        if (operand1.length != operand2.length) {
-
-            //pad operand2
-            if (operand1.length > operand2.length) {
-
-                operand2 = normalize(operand2, operand1.length);
-
-            } else { //pad operand1
-
-                operand1 = normalize(operand1, operand2.length);
-
-            }
-
-        }
-
-        //we now know that operands are same sign and length, check if values in magnitude are equal
-        for (int i = operand1.length - 1; i >= 0; i--) {
-
-            if (operand1[i] != operand2[i]) {
-
-                //if any value in magnitude is not equal, BigNumbers are not equal
-                return false;
-
-            }
-
-        }
-
-        return true;
-
     }
 
     /**
+     * A function to quantitatively compare the invoker to a second BigNumber.
      * @param number the BigNumber to compare the invoker to
      * @return -1 if argument is smaller than the invoker, 0 if the argument is equal to the invoker, 1 if the argument is larger than the invoker
      * @author Daniel Haluszka
      */
-    public int compareTo(BigNumber number) { //maybe this should replace the findGreaterNumber?
+    public int compareTo(BigNumber number) {
+
+        //TODO: replace findGreaterNumber with compareTo
 
         //if the signs are not the same
         if (this.negative != number.negative) {
@@ -320,110 +292,70 @@ public class BigNumber {
 
         }
 
-        //otherwise the signs are the same, check values
+        //otherwise the signs are the same, check length of operands
 
         //rename for clarity
         int[] operand1 = this.magnitude;
         int[] operand2 = number.magnitude;
 
-        //if the two BigNumbers being compared are not the same size, pad the shorter of the two
-        if (operand1.length != operand2.length) {
+        if (operand1.length > operand2.length) {
 
-            //pad operand2
-            if (operand1.length > operand2.length) {
+            if (this.negative == true) {
 
-                operand2 = normalize(operand2, operand1.length);
+                //signs are negative so operand1 must be smaller
+                return 1;
 
-            } else { //pad operand1
+            } else {
 
-                operand1 = normalize(operand1, operand2.length);
+                //else signs must be positive so operand1 must be larger
+                return -1;
+
+            }
+
+        } else if (operand1.length < operand2.length) {
+
+            if (this.negative == true) {
+
+                //signs are negative so operand1 must be larger
+                return -1;
+
+            } else {
+
+                //else signs must be positive so operand1 must be smaller
+                return 1;
 
             }
 
         }
 
-        //we now know that operands are same sign and length, compare values of magnitudes
-
-        //this variable will indicate whether or not we're still looking at leading zeros, will turn to false once we see any other value
-        boolean leadingZeros = true;
-
+        //if the signs and lengths are the same, check the digits in the magnitude
         for (int i = operand1.length - 1; i >= 0; i--) {
 
-            //if still reading leading zeros and both are 0, move to next digit in magnitude
-            if (leadingZeros == true && operand1[i] == 0 && operand2[i] == 0) {
+            if (operand1[i] > operand2[i]) {
 
-                continue;
-
-            }
-
-            if (leadingZeros == true && operand1[i] == 0 && operand2[i] != 0) {
-
-                //if we see a value other than leading zeros from operand2 first and the signs are negative, operand2 is smaller
                 if (this.negative == true) {
 
-                    return -1;
-
-                } else {
-
-                    //else the signs must be positive and operand2 is larger
-                    return 1;
-
-                }
-
-            } else if (leadingZeros == true && operand1[i] != 0 && operand2[i] == 0) {
-
-                //if we see a value other than leading zeros from operand1 first and the signs are negative, operand1 is smaller
-                if (this.negative == true) {
-
+                    //signs are negative so operand1 must be smaller
                     return 1;
 
                 } else {
 
-                    //else the signs must be positive and operand1 is larger
+                    //sign must be positive so operand1 must be larger
                     return -1;
 
                 }
 
-            } else if (leadingZeros == true && operand1[i] != 0 && operand2[i] != 0) {
+            } else if (operand1[i] < operand2[i]) {
 
-                //if both magnitudes are the same number of digits long
+                if (this.negative == true) {
 
-                //if current digit of magnitudes are equal, move to next digit
-                if (operand1[i] == operand2[i]) {
+                    //signs are negative so operand1 must be larger
+                    return -1;
 
-                    continue;
+                } else {
 
-                }
-
-                //if the current digit of operand1 is greater than current digit of operand2
-                if (operand1[i] > operand2[i]) {
-
-                    //if the signs are negative, operand1 is smaller, return 1
-                    if (this.negative == true) {
-
-                        return 1;
-
-                    } else {
-
-                        //else the signs must be positive and operand1 is larger, return -1
-                        return -1;
-
-                    }
-
-                //if the current digit of operand2 is greater than the current digit of operand1
-                } else if (operand1[i] < operand2[i]) {
-
-                    //if the signs are negative, operand2 is smaller, return 1
-                    if (this.negative == true) {
-
-                        return -1;
-
-                    } else {
-
-                        //else the signs must be positive and operand2 is larger, return -1
-                        return 1;
-
-                    }
+                    //sign must be positive so operand1 must be smaller
+                    return 1;
 
                 }
 
@@ -431,17 +363,17 @@ public class BigNumber {
 
         }
 
+        //if signs, lengths, and digits are all the same, the invoker and argument are equal
         return 0;
 
     }
 
     /**
+     * A function to return the sign of the invoker.
      * @return -1 if sign of invoker is negative, 1 if sign of invoker is positive
      * @author Daniel Haluszka
      */
     public int sign() {
-
-        int sign = 0;
 
         if (this.negative == true) {
 
@@ -456,16 +388,17 @@ public class BigNumber {
     }
 
     /**
-     * @param number the BigNumber to multiply the invoker by
+     * A function to multiply the invoker by a second BigNumber.
+     * @param factor the BigNumber to multiply the invoker by
      * @return the product of the invoker and argument
      * @author Daniel Haluszka
      */
-    public BigNumber multiply(BigNumber number) {
+    public BigNumber multiply(BigNumber factor) {
 
         BigNumber temp = new BigNumber("0");
 
         //if multiplying by 0, return 0
-        if (number.equals(temp)) {
+        if (factor.equals(temp)) {
 
             return temp;
 
@@ -473,95 +406,31 @@ public class BigNumber {
 
         temp.magnitude[0] = 1;
 
-        //if multiplying by 1, return invoker (this doesn't check for leading 0's)
-        if (number.equals(temp)) {
+        //if multiplying by 1, return invoker
+        if (factor.equals(temp)) {
 
             return this;
 
         }
 
+
         temp.magnitude[0] = 0;
 
-        //rename for clarity
-        int[] operand1 = this.magnitude;
-        int[] operand2 = number.magnitude;
-
-        //if the two BigNumbers being compared are not the same size, pad the shorter of the two
-        //doing this first allows us to use one loop to get through both operands in the next step as we know that they will be the same length
-        if (operand1.length != operand2.length) {
-
-            //pad operand2
-            if (operand1.length > operand2.length) {
-
-                operand2 = normalize(operand2, operand1.length);
-
-            } else { //pad operand1
-
-                operand1 = normalize(operand1, operand2.length);
-
-            }
-
-        }
-
-        /**
-         * MIGHT NOT NEED TO CALCULATE NUMBER OF DIGITS IN PRODUCT, ADD MIGHT TAKE CARE OF THIS AUTOMATICALLY
-         */
-        //find first significant digit in magnitude of invoker and argument in case of leading zeros
-        int sigDig1 = 0;
-        int sigDig2 = 0;
-
-        for (int i = operand1.length - 1; i >= 0; i--) {
-
-            if (i == (operand1.length - 1) && operand1[i] != 0) {
-
-                //if the first digit is not a zero, there are no leading zeros
-                sigDig1 = i;
-
-            } else if (operand1[i] != 0) {
-
-                //otherwise note first significant digit after leading zeros
-                sigDig1 = i;
-
-            }
-
-            if (i == (operand1.length - 1) && operand2[i] != 0) {
-
-                //if the first digit is not a zero, there are no leading zeros
-                sigDig2 = i;
-
-            } else if (operand2[i] != 0) {
-
-                //otherwise note first significant digit after leading zeros
-                sigDig2 = i;
-
-            }
-
-        }
-
-        //calculate number of digits needed for product and assign new magnitude array to temp BigNumber
-        int sizeOfProduct = (int) (Math.floor(Math.log(sigDig1) + Math.log(sigDig2)));
-        int tempMagnitude[] = new int[sizeOfProduct];
-        temp.magnitude = tempMagnitude;
-
-        //convert magnitude of argument to String for use in last step
-        String numberToString = number.toString();
-
-        //remove negative sign if necessary
-        if (number.negative = true) {
-
-            numberToString = numberToString.substring(numberToString.length() - 1);
-
-        }
+        //create new array of ints to act as iterator in loop
+        int[] iter = new int[factor.magnitude.length];
 
         //finally, perform multiplication using given values by method of repeated addition
-        for (int i = 0; i < Integer.parseInt(numberToString); i++) {
+        //loop will end once value in iter is equal to that in magnitude of factor, meaning that the loop has run the factor of times equal to the magnitude of factor
+        while (!Arrays.equals(iter, factor.magnitude)) {
 
             temp.add(this);
+
+            increment(iter);
 
         }
 
         //check if negative sign is needed base on signs of operands
-        if(this.negative == true && number.negative == false || this.negative == false && number.negative == true) {
+        if(this.negative == true && factor.negative == false || this.negative == false && factor.negative == true) {
 
             temp.negative = true;
 
@@ -572,101 +441,159 @@ public class BigNumber {
     }
 
     /**
-     * @param number the BigNumber to divide the invoker by
-     * @return the quotient of the division of the invoker and argument
+     * A function to divide the invoker by a second BigNumber.
+     * @param divisor the BigNumber to divide the invoker by
+     * @return a pair containing the quotient of the division of the invoker and argument in the first position, and the remainder in the second position.
      * @throws IllegalArgumentException
      * @author Daniel Haluszka
      */
-    public BigNumber divide(BigNumber number) throws IllegalArgumentException {
+    public BigNumberPair divide(BigNumber divisor) throws IllegalArgumentException {
 
-        BigNumber test = new BigNumber("0");
+        //TODO: STILL NEED TO HANDLE DIVIDING BY A NEGATIVE NUMBER
+
+        BigNumberPair result = new BigNumberPair();
+        BigNumber temp = new BigNumber("0", false);
 
         //check for dividing by 0
-        if (number.equals(test)) {
+        if (divisor.equals(temp)) {
 
             throw new IllegalArgumentException("Divisor cannot be 0");
 
         }
 
-        test.magnitude[0] = 1;
+        temp.magnitude[0] = 1;
 
         //if dividing by 1, return invoker (this does not check for leading 0's)
-        if (number.equals(test)) {
+        if (divisor.equals(temp)) {
 
-            return this;
+            //return invoker as quotient, second value in pair (remainder) is initialized to 0
+            result.setFirst(this);
+            return result;
 
         }
 
-        //rename for clarity
-        int[] operand1 = this.magnitude;
-        int[] operand2 = number.magnitude;
+        //calculate quotient and remainder by method of repeated addition
+        //create new non-negative BigNumber with magnitude of temp to compare workingTemp against in case invoker is negative
+        BigNumber refTemp = new BigNumber(this.magnitude, false);
+        BigNumber workingTemp = new BigNumber("0", false);
+        BigNumber remainder = new BigNumber("0", false);
+        int[] counter = new int[divisor.magnitude.length];
+        boolean loop = true;
 
-        //if the two BigNumbers being compared are not the same size, pad the shorter of the two (this should be the divisor but may not due to leading 0's)
-        if (operand1.length != operand2.length) {
+        //this loop will add the magnitude of divisor to workingTemp until it goes over the magnitude of the invoker, at which point it will subtract the magnitude of divisor and calculate the remainder
+        while (loop == true) {
 
-            //pad operand2
-            if (operand1.length > operand2.length) {
+            //if divisor can be added to magnitude of workingTemp without going over magnitude of divisor, we don't yet need to calculate remainder
+            workingTemp.add(divisor);
+            increment(counter);
 
-                operand2 = normalize(operand2, operand1.length);
+            if (workingTemp.compareTo(refTemp) == 0) {
 
-            } else { //pad operand1
+                //if the magnitude of workingTemp is equal to the magnitude of the invoker, there is no remainder
+                //decrement counter to remove extra addition
+                decrement(counter);
 
-                operand1 = normalize(operand1, operand2.length);
+            } else if (workingTemp.compareTo(refTemp) == -1) {
+
+                //if the magnitude of working temp goes over the magnitude of the invoker, calculate remainder
+                //subtract the magnitude of divisor again to be used in calculating remainder
+                workingTemp.add(divisor);
+
+                remainder.magnitude = subtract(this.magnitude, workingTemp.magnitude);
+
+                //decrement counter to remove extra addition
+                decrement(counter);
 
             }
-
         }
 
-        //calculate quotient and remainder by method of repeated subtraction
-        BigNumber workingTemp = new BigNumber(this.magnitude, this.negative);
-        int remainder;
+        //update magnitude of temp with value of counter in magnitude and return as quotient, return remainder as second value in pair
+        temp.magnitude = counter;
 
-        //this loop will subtract the value of the argument each time and subtract it from the magnitude of workingTemp until it needs to calculate remainder,
-        //at which point it will set the magnitude of workingTemp = 0 to indicate that the operation is complete
-        int counter = 0;
-
-        while (!workingTemp.magnitude.equals(0)) {
-
-            //if number can be subtracted from magnitude of workingTemp without going negative, we don't yet need to calculate remainder
-            workingTemp.subtract(number); //why is there no subtract given argument of type BigNumber?
-            counter++;
-
-            if (workingTemp.negative == true) {
-
-                //if the magnitude has gone negative, it's time to calculate remainder
-
-                //readd the value of number again to be used in calculating remainder
-                workingTemp.add(number);
-
-                //still need to calculate remainder
-                remainder = 0;
-
-                //set magnitude = 0
-                int[] tempMagnitude = new int[1];
-                tempMagnitude[0] = 0;
-                workingTemp.magnitude = tempMagnitude;
-
-                counter--;
-
-            }
-
-        }
-
-        //create new BigNumber with value of counter in magnitude and return as quotient, throw out remainder for now
-        BigNumber temp = new BigNumber(Integer.toString(counter));
-
-        return temp;
+        result.setFirst(temp);
+        result.setSecond(remainder);
+        return result;
 
     }
 
     /**
-     * @param number
-     * @return
+     * A function to find two factors of the invoker.
+     * @return a pair containing the two factors of the invoker in descending order
      * @author Daniel Haluszka
      */
-    public BigNumber factor(BigNumber number) {
+    public BigNumberPair factor() {
 
-        return number;
+        BigNumberPair result = new BigNumberPair();
+        BigNumber fact1 = new BigNumber("0", false);
+        BigNumber fact2 = new BigNumber("2", false);
+
+        //check if even
+        if(this.magnitude[0] % 2 == 0) {
+
+            //if even, divide by 2
+            //divide will return first factor in first pair value, 0 in second because there will be no remainder
+            result = this.divide(fact2);
+            //update second pair value to 2
+            result.setSecond(fact2);
+            return result;
+
+        } else {
+
+            //use Knuth algorithm if odd
+
+        }
+
+        return result;
+
+    }
+
+    /**
+     * A function to increment an array of ints that is being used to represent a large factor.
+     * @param arr the array of ints representing a large factor to be incremented by one
+     * @author Daniel Haluszka
+     */
+    public void increment(int[] arr) {
+
+        for (int i = 0; i < arr.length; i++) {
+
+            arr[i]++;
+
+            if (arr[i] < 10) {
+
+                break;
+
+            } else {
+
+                arr[i] = 0;
+
+            }
+
+        }
+
+    }
+
+    /**
+     * A function to decrement an array of ints that is being used to represent a large number.
+     * @param arr the array of ints representing a large number to be decremented by one
+     * @author Daniel Haluszka
+     */
+    public void decrement(int[] arr) {
+
+        for (int i = 0; i < arr.length; i++) {
+
+            arr[i]--;
+
+            if (arr[i] >= 0) {
+
+                break;
+
+            } else {
+
+                arr[i] = 9;
+
+            }
+
+        }
 
     }
 
