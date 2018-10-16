@@ -190,11 +190,7 @@ public class BigNumber {
      * @param operand2 Operand to subtract from operand1
      * @return int[] The result.
      */
-<<<<<<< HEAD
     private int[] subtract(int[] operand1, int[] operand2){
-=======
-    private int[] subtract(@NotNull int[] operand1,@NotNull int[] operand2){
->>>>>>> master
         int k = 0; //the borrow
         int[] sum = new int[operand1.length];//sum will never be longer than operand1
 
