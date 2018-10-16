@@ -2,21 +2,33 @@ package com.company;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * <h1>BigNumber</h1>
+ * The BigNumber class implements arbitrary precision arithmetic.
+ * <p>
+ * Sign and magnitude and used as the representation of BigNumber.
+ * Magnitude is stored as an int[]
+ *
+ * @author  Warren Devonshire
+ */
 public class BigNumber {
 
+    //magnitudes have least significant digit first.
     private int[] magnitude;
-    private static int base = 10;
-    private boolean negative;//sign is true when positive, false when negative
+    private static int base = 10; //Working in base 10
+    //negative is true when sign is negative, false otherwise
+    //might be changed to int sign, holding either -1, 0, or 1
+    private boolean negative;
 
     /**
-     *
+     * @author Warren Devonshire
      * @param baseTenNumber
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException Throws when string input is formatted incorrectly.
      */
     public BigNumber(String baseTenNumber)throws IllegalArgumentException{
         magnitude = processInput(baseTenNumber);
         normalize();
-        if(magnitude.length == 1){
+        if(magnitude.length == 1){//if magnitude is zero make sign positive.
             if(magnitude[0] == 0){
                 this.negative = false;
             }
@@ -24,10 +36,10 @@ public class BigNumber {
     }
 
     /**
-     *
+     * @author Warren Devonshire
      * @param baseTenNumber
      * @param negative
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException Throws when string input is formatted incorrectly
      */
     public BigNumber(String baseTenNumber, boolean negative)throws IllegalArgumentException{
         magnitude = processInput(baseTenNumber);
@@ -41,7 +53,7 @@ public class BigNumber {
     }
 
     /**
-     *
+     * @author Warren Devonshire
      * @param magnitude
      * @param negative
      */
@@ -56,14 +68,12 @@ public class BigNumber {
         }
     }
 
-    //helper function for constructor.
-    //takes string input and returns an array of int.
-    //checks that string is a signed decimal number. throws IllegalArgumentException otherwise.
     /**
-     *
-     * @param input
-     * @return
-     * @throws IllegalArgumentException
+     * Takes string input and returns an in[]. Checks that string is a signed decimal number.
+     * @author Warren Devonshire
+     * @param input This is a string of representing a number in base 10. may have a leading '-' sign.
+     * @return int[] This returns a magnitude
+     * @throws IllegalArgumentException Throws when string input is formatted incorrectly
      */
     private int[] processInput(@NotNull String input)throws IllegalArgumentException{
         if(input.length() == 0) throw new IllegalArgumentException("String length cannot be zero");
@@ -104,10 +114,7 @@ public class BigNumber {
         return magnitude;
     }
 
-    /**
-     *
-     * @return
-     */
+
     @Override
     public String toString(){
         StringBuilder str;
@@ -124,9 +131,10 @@ public class BigNumber {
     }
 
     /**
-     *
-     * @param number
-     * @return
+     * Adds two BigNumbers and returns a new BigNumber
+     * @author Warren Devonshire
+     * @param number The BigNumber to be added to this.
+     * @return BigNumber The sum
      */
     public BigNumber add(@NotNull BigNumber number){
         int[] operand1 = this.magnitude; //renaming for clarity
@@ -153,12 +161,13 @@ public class BigNumber {
         }
     }
 
-    //assumes operands are same length
+
     /**
-     *
-     * @param operand1
-     * @param operand2
-     * @return
+     * Takes two in[] and adds them.
+     * @author Warren Devonshire
+     * @param operand1 The first operand.
+     * @param operand2 The second operand.
+     * @return int[] The sum.
      */
     private int[] add(@NotNull int[] operand1, @NotNull int[] operand2){
         int k = 0; //k is the carry digit.
@@ -173,31 +182,29 @@ public class BigNumber {
         return sum;
     }
 
-    //assume operand1 >= operand2
+
     /**
-     *
-     * @param operand1
-     * @param operand2
-     * @return
+     * Subtracts operand2 from operand1. Assumes operand1 is bigger than operand2
+     * @author Warren Devonshire
+     * @param operand1 Operand to be subtracted from
+     * @param operand2 Operand to subtract from operand1
+     * @return int[] The result.
      */
     private int[] subtract(@NotNull int[] operand1,@NotNull int[] operand2){
-        int k = 0;
-        int[] sum = new int[operand1.length];
+        int k = 0; //the borrow
+        int[] sum = new int[operand1.length];//sum will never be longer than operand1
 
         for(int i = 0; i < operand1.length; i++){
             sum[i] = (operand1[i] - operand2[i] + k + base) % base;
-            k = (operand1[i] - operand2[i] + k) < 0 ? -1 : 0;
+            k = (operand1[i] - operand2[i] + k) < 0 ? -1 : 0; //calculate borrow
         }
 
         return sum;
     }
 
-    //if parameter 1 is less than parameter 2 return -1.
-    //if equal return 0.
-    //if parameter 1 is greater than parameter 2 return 1.
-    //assumes numbers are same length.
     /**
-     *
+     * The same as a compareTo method. Will be changed later.
+     * @author Warren Devonshire
      * @param p1
      * @param p2
      * @return
@@ -216,7 +223,8 @@ public class BigNumber {
     }
 
     /**
-     *
+     * Removes leading zeroes in the magnitude
+     * @author Warren Devonshire
      */
     private void normalize(){
         int counter = 0;
@@ -238,11 +246,11 @@ public class BigNumber {
         }
     }
 
-    //assumes number is less than toSize
     /**
-     *
-     * @param number
-     * @param toSize
+     * Pads a magnitude with leading zeroes.
+     * @author Warren Devonshire
+     * @param number The int[] to be padded.
+     * @param toSize The size padded to.
      * @return
      */
     private int[] normalize(int[] number, int toSize){
@@ -253,10 +261,9 @@ public class BigNumber {
         return temp;
     }
 
-    //returns ~this
     /**
-     *
-     * @return
+     * @author Warren Devonshire
+     * @return Returns new negated BigNumber with same magnitude as self.
      */
     public BigNumber negate(){
         return new BigNumber(magnitude, !negative);
