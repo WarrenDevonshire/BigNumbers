@@ -19,6 +19,7 @@ class BigNumberTest {
     String[] bigIntegerResults;
     int size = 100;
     int base = 10;
+    int numberSize = 50;
 
     @BeforeEach
     void setUp() {
@@ -30,10 +31,10 @@ class BigNumberTest {
         bigIntegerResults = new String[size];
 
         Random r = new Random();
-        StringBuilder temp = new StringBuilder(2);
+        StringBuilder temp = new StringBuilder(numberSize);
         String str;
         for(int i = 0; i < size; i++){
-            for(int j = 0; j < 2; j++){
+            for(int j = 0; j < numberSize; j++){
                 temp.append(r.nextInt(base));
             }
             str = temp.toString();
