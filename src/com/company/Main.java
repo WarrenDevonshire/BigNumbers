@@ -3,7 +3,7 @@ package com.company;
 import java.util.Scanner;
 
 /**
- * A simple driver program for debugging and testing the BigNumber class. Does not have error-checking.
+ * A simple driver program for debugging and testing the BigNumber class. Does not have input-checking.
  *
  * @author Daniel Haluszka
  */

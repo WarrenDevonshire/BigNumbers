@@ -567,7 +567,7 @@ public class BigNumber {
      */
     public BigNumberPair factor() {
 
-        //TODO: clean up redundant variables in this function, handle negatives
+        //TODO: clean up redundant variables in this function, handle negatives and zero invoker
 
         BigNumberPair result = new BigNumberPair();
         BigNumber twoBn = new BigNumber("2", false);
@@ -584,16 +584,16 @@ public class BigNumber {
 
         } else {
 
-            //approximate length of square root of invoker (n/2) and loop through all numbers of that length or less
+            //approximate length of square root of invoker (n/2) and loop through all numbers of that length or less stopping at 1 (which will always be a factor of the invoker)
             int rootLength = (int) Math.ceil((double) this.magnitude.length / 2); //the length of the square root of the invoker
             int maxRoot = (int) (Math.pow(10, rootLength) - 1); //the highest number of length rootLength for loop to start at
-            BigNumber mag = new BigNumber("0");
+            BigNumber mag = new BigNumber(Integer.toString(maxRoot), false);
             int[] zeroArr = new int[1];
             int[] oneArr = new int[1];
             oneArr[0] = 1;
             BigNumberPair divResult = new BigNumberPair(); //store the result of the division operation in the loop
 
-            for (int i = maxRoot; i < maxRoot; i++) {
+            for (int i = maxRoot; i > 0; i++) {
 
                 if (this.divide(mag).getSecond().magnitude == zeroArr) {
 
