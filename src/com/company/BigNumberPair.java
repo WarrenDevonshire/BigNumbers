@@ -25,6 +25,7 @@ public class BigNumberPair {
     }
 
     /**
+     * Sets the BigNumber object in the first position of the invoker.
      * @param newVal the BigNumber to replace the value currently in the first position of the BigNumberPair
      * @author Daniel Haluszka
      */
@@ -35,6 +36,7 @@ public class BigNumberPair {
     }
 
     /**
+     * Returns the BigNumber object in the second position of the invoker.
      * @return the BigNumber currently in the first position of the BigNumberPair
      * @author Daniel Haluszka
      */
@@ -45,6 +47,7 @@ public class BigNumberPair {
     }
 
     /**
+     * Sets the BigNumber object in the first position of the invoker.
      * @param newVal the BigNumber to replace the value currently in the second position of the BigNumberPair
      * @author Daniel Haluszka
      */
@@ -55,6 +58,7 @@ public class BigNumberPair {
     }
 
     /**
+     * Returns the BigNumber object currently in the second position of the invoker.
      * @return the BigNumber currently in the second position in the BigNumberPair
      * @author Daniel Haluszka
      */

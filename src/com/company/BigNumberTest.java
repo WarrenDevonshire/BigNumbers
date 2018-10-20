@@ -79,4 +79,39 @@ class BigNumberTest {
             bigIntegerResults[i] = bigIntegers1[i].negate().add(bigIntegers2[size - 1 - i]).toString(base);
         }
     }
+
+    @Test
+    void multNegatives() {
+
+
+
+    }
+
+    @Test
+    void multPositives() {
+
+
+
+    }
+
+    @Test
+    void divNegatives() {
+
+
+
+    }
+
+    @Test
+    void divPositives() {
+
+
+
+    }
+
+    @Test
+    void factor() {
+
+
+
+    }
 }
