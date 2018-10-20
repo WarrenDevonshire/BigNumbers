@@ -2,6 +2,11 @@ package com.company;
 
 import java.util.Scanner;
 
+/**
+ * A simple driver program for debugging and testing the BigNumber class. Does not have error-checking.
+ *
+ * @author Daniel Haluszka
+ */
 public class Main {
 
     public static void main(String[] args) {
@@ -32,17 +37,17 @@ public class Main {
             input = scanner.nextLine();
             if (Integer.parseInt(input) == -1) {
 
-                System.out.println("negate 2\n");
+                test2 = test2.negate();
 
             }
 
-            System.out.println("Enter operation to be performed (a/s/m/d/f):\n");
+            System.out.println("Enter operation to be performed (a/s/m/d/f/e/c):\n");
             input = scanner.nextLine();
 
             switch (input) {
 
                 case "a":
-                    System.out.println(test.add(test2).toString() + "\n");
+                    System.out.println("Factor 1: " + test.factor().getFirst().toString() + " Factor 2: " + test.factor().getSecond().toString() + "\n");
                     break;
 
                 case "s":
@@ -59,6 +64,14 @@ public class Main {
 
                 case "f":
                     System.out.println("Factor 1: " + test.factor().getFirst().toString() + " Factor 2: " + test.factor().getSecond().toString() + "\n");
+                    break;
+
+                case "e":
+                    System.out.println(test.equals(test2));
+                    break;
+
+                case "c":
+                    System.out.println(test.compareTo(test2));
                     break;
 
             }

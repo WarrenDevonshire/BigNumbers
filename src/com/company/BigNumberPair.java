@@ -1,18 +1,20 @@
 package com.company;
 
 /**
- * A data structure to hold a pair of associated BigNumbers
+ * A data structure to hold a pair of associated BigNumbers.
+ *
  * @author Daniel Haluszka
  */
 public class BigNumberPair {
 
     /**
-     * a primitive array of BigNumbers of size 2 to hold the pair of BigNumberss
+     * a primitive array of BigNumbers of size 2 to hold the pair of BigNumbers
      */
     private BigNumber[] arr = new BigNumber[2];
 
     /**
      * Constructor for the BigNumberPair class. Instantiates a BigNumber pair with two non-negative 0-valued BigNumbers as the values of the pair
+     *
      * @author Daniel Haluszka
      */
     public BigNumberPair() {
@@ -26,6 +28,7 @@ public class BigNumberPair {
 
     /**
      * Sets the BigNumber object in the first position of the invoker.
+     *
      * @param newVal the BigNumber to replace the value currently in the first position of the BigNumberPair
      * @author Daniel Haluszka
      */
@@ -37,6 +40,7 @@ public class BigNumberPair {
 
     /**
      * Returns the BigNumber object in the second position of the invoker.
+     *
      * @return the BigNumber currently in the first position of the BigNumberPair
      * @author Daniel Haluszka
      */
@@ -48,6 +52,7 @@ public class BigNumberPair {
 
     /**
      * Sets the BigNumber object in the first position of the invoker.
+     *
      * @param newVal the BigNumber to replace the value currently in the second position of the BigNumberPair
      * @author Daniel Haluszka
      */
@@ -59,6 +64,7 @@ public class BigNumberPair {
 
     /**
      * Returns the BigNumber object currently in the second position of the invoker.
+     *
      * @return the BigNumber currently in the second position in the BigNumberPair
      * @author Daniel Haluszka
      */

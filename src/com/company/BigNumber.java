@@ -478,10 +478,10 @@ public class BigNumber {
 
         //TODO: rename variables to something more readable, maybe add check for 1 divisor back in?
 
-        int[] zeroArr = new int[1];
+        BigNumber zeroBn = new BigNumber("0", false);
 
         //check for dividing by 0
-        if (divisor.magnitude == zeroArr) {
+        if (divisor.equals(zeroBn)) {
 
             throw new IllegalArgumentException("Divisor cannot be 0");
 
@@ -496,26 +496,35 @@ public class BigNumber {
         int rHat = 0;
         BigNumberPair result = new BigNumberPair();
         int d = 0;
+        int n = v.length + 1;
+        int m = u.length - n;
 
         //step D1
-        d = (int) Math.floor((base - 1) / v[v.length - 1]);
+        d = (int) Math.floor((base - 1) / v[n - 1]);
         System.out.println(d);
         BigNumber dBn = new BigNumber(Integer.toString(d), false);
         u = this.multiply(dBn).magnitude;
+        v = divisor.multiply(dBn).magnitude;
+
+        if (d == 1) {
+
+            u[m + n] = 0;
+
+        }
 
         //step D2
-        for (int i = u.length; i >= 0; i--) {
+        for (int i = m; i >= 0; i--) {
 
             //step D3
-            qHat = (int) Math.floor(((u[i + v.length] * base) + u[i + v.length - 1]) / v[v.length - 1]);
-            rHat = ((u[i + v.length] * base) + u[i + v.length - 1]) % v[v.length - 1];
+            qHat = (int) Math.floor(((u[i + n] * base) + u[i + (n - 1)]) / v[n - 1]);
+            rHat = ((u[i + n] * base) + u[i + (n - 1)] % v[n - 1]);
 
             while (rHat < base) {
 
-                if (qHat == base || (qHat * v[v.length - 2]) > ((base * rHat) + u[i + v.length - 2])) {
+                if (qHat == base || (qHat * v[n - 2]) > ((base * rHat) + u[i + (n - 2)])) {
 
                     qHat--;
-                    rHat += v[v.length - 1];
+                    rHat += v[n - 1];
 
                 }
 
@@ -540,7 +549,7 @@ public class BigNumber {
         result.setSecond(remainder);
 
         //check if negative sign is needed base on signs of operands
-        if (this.negative == true && divisor.negative == false && result.getFirst().magnitude != zeroArr|| this.negative == false && divisor.negative == true && result.getFirst().magnitude != zeroArr) {
+        if (this.negative == true && divisor.negative == false && result.getFirst().equals(zeroBn) || this.negative == false && divisor.negative == true && result.getFirst().equals(zeroBn)) {
 
             result.getFirst().negative = true;
 
@@ -558,7 +567,7 @@ public class BigNumber {
      */
     public BigNumberPair factor() {
 
-        //TODO: clean up redundant variables in this function
+        //TODO: clean up redundant variables in this function, handle negatives
 
         BigNumberPair result = new BigNumberPair();
         BigNumber twoBn = new BigNumber("2", false);
