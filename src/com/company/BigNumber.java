@@ -184,6 +184,10 @@ public class BigNumber {
     }
 
 
+    public BigNumber subtract(BigNumber number){
+        return add(number.negate());
+    }
+
     /**
      * Subtracts operand2 from operand1. Assumes operand1 is bigger than operand2
      *

@@ -59,16 +59,16 @@ class BigNumberTest {
     @Test
     void addPositives() {
         for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].add(bigNumbers2[i]).toString();
-            bigIntegerResults[i] = bigIntegers1[i].add(bigIntegers2[i]).toString(base);
+            bigNumberResults[i] = bigNumbers1[i].add(bigNumbers2[size - 1 - i]).toString();
+            bigIntegerResults[i] = bigIntegers1[i].add(bigIntegers2[size - 1 - i]).toString(base);
         }
     }
 
     @Test
     void addNegatives() {
         for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].negate().add(bigNumbers2[i].negate()).toString();
-            bigIntegerResults[i] = bigIntegers1[i].negate().add(bigIntegers2[i].negate()).toString(base);
+            bigNumberResults[i] = bigNumbers1[i].negate().add(bigNumbers2[size - 1 - i].negate()).toString();
+            bigIntegerResults[i] = bigIntegers1[i].negate().add(bigIntegers2[size - 1 - i].negate()).toString(base);
         }
     }
 
@@ -140,4 +140,27 @@ class BigNumberTest {
 
     }
 
+    @Test
+    void subtractPositives() {
+        for (int i = 0; i < size; i++) {
+            bigNumberResults[i] = bigNumbers1[i].subtract(bigNumbers2[size - 1 - i]).toString();
+            bigIntegerResults[i] = bigIntegers1[i].subtract(bigIntegers2[size - 1 - i]).toString(base);
+        }
+    }
+
+    @Test
+    void subtractNegatives() {
+        for (int i = 0; i < size; i++) {
+            bigNumberResults[i] = bigNumbers1[i].negate().subtract(bigNumbers2[size - 1 - i].negate()).toString();
+            bigIntegerResults[i] = bigIntegers1[i].negate().subtract(bigIntegers2[size - 1 - i].negate()).toString(base);
+        }
+    }
+
+    @Test
+    void subtractOpposites() {
+        for (int i = 0; i < size; i++) {
+            bigNumberResults[i] = bigNumbers1[i].negate().subtract(bigNumbers2[size - 1 - i]).toString();
+            bigIntegerResults[i] = bigIntegers1[i].negate().subtract(bigIntegers2[size - 1 - i]).toString(base);
+        }
+    }
 }
