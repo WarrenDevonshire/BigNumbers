@@ -408,61 +408,73 @@ public class BigNumber {
      */
     public BigNumber multiply(BigNumber factor) {
 
-        //TODO: rename variables to something more readable, maybe add checks for 0 or 1 multiplier back in before Knuth code?
-
         BigNumber result = new BigNumber("0", false);
         BigNumber zeroBn = new BigNumber("0", false);
-        int[] w = new int[this.magnitude.length + factor.magnitude.length];
-        int[] u = new int[this.magnitude.length];
-        int[] v = new int[factor.magnitude.length];
-        u = this.magnitude;
-        v = factor.magnitude;
-        int t = 0;
-        int k = 0; //carry
-        int m = u.length;
-        int n = v.length;
+        BigNumber oneBn = new BigNumber("1", false);
 
-        //step M1
-        for (int j = 0; j < n; j++) {
+        //check for 0 or 1 multiplier and return simple cases if so
+        if (factor.equals(zeroBn)) {
 
-            //check for zero multiplier, step M2
-            if (v[j] == 0) {
+            return zeroBn;
 
-                w[j + m] = 0;
+        } else if (factor.equals(oneBn)) {
 
-            } else {
+            return this;
 
-                //step M3
-                k = 0;
+        } else {
 
-                for (int i = 0; i < m; i++) {
+            int[] product = new int[this.magnitude.length + factor.magnitude.length];
+            int[] operand1 = new int[this.magnitude.length];
+            int[] operand2 = new int[factor.magnitude.length];
+            operand1 = this.magnitude;
+            operand2 = factor.magnitude;
+            int temp = 0;
+            int carry = 0; //carry
+            int m = operand1.length;
+            int n = operand2.length;
 
-                    //step M4
-                    t = ((u[i] * v[j]) + w[i + j] + k);
-                    w[i + j] = t % base;
-                    k = t / base;
+            //step M1
+            for (int j = 0; j < n; j++) {
+
+                //check for zero multiplier, step M2
+                if (operand2[j] == 0) {
+
+                    product[j + m] = 0;
+
+                } else {
+
+                    //step M3
+                    carry = 0;
+
+                    for (int i = 0; i < m; i++) {
+
+                        //step M4
+                        temp = ((operand1[i] * operand2[j]) + product[i + j] + carry);
+                        product[i + j] = temp % base;
+                        carry = temp / base;
+
+                    }
+
+                    //step M5
+                    product[j + m] = carry;
 
                 }
 
-                //step M5
-                w[j + m] = k;
+            }
+
+            result.magnitude = product;
+            result.normalize();
+
+            //check if negative sign is needed base on signs of operands
+            if (this.negative == true && factor.negative == false && result.equals(zeroBn) == false || this.negative == false && factor.negative == true && result.equals(zeroBn) == false) {
+
+                result.negative = true;
 
             }
 
-        }
-
-        System.out.print("\n");
-        result.magnitude = w;
-        result.normalize();
-
-        //check if negative sign is needed base on signs of operands
-        if (this.negative == true && factor.negative == false && result.equals(zeroBn) == false || this.negative == false && factor.negative == true && result.equals(zeroBn) == false) {
-
-            result.negative = true;
+            return result;
 
         }
-
-        return result;
 
     }
 
@@ -476,6 +488,7 @@ public class BigNumber {
      */
     public BigNumberPair divide(BigNumber divisor) throws IllegalArgumentException {
 
+        /**
         //TODO: rename variables to something more readable, maybe add check for 1 divisor back in?
 
         BigNumber zeroBn = new BigNumber("0", false);
@@ -556,6 +569,77 @@ public class BigNumber {
         }
 
         return result;
+         **/
+
+        BigNumberPair result = new BigNumberPair();
+        BigNumber counter= new BigNumber("0", false);
+
+        //check for dividing by 0
+        if (divisor.equals(counter)) {
+
+            throw new IllegalArgumentException("Divisor cannot be 0");
+
+        }
+
+        counter.magnitude[0] = 1;
+
+        //if dividing by 1, return invoker (this does not check for leading 0's)
+        if (divisor.equals(counter)) {
+
+            //return invoker as quotient, second value in pair (remainder) is initialized to 0
+            result.setFirst(this);
+            return result;
+
+        }
+
+        counter.magnitude[0] = 0;
+
+        //calculate quotient and remainder by method of repeated addition
+        //create new non-negative BigNumber with magnitude of temp to compare workingTemp against in case invoker is negative
+        BigNumber refTemp = new BigNumber(this.magnitude, false);
+        BigNumber workingTemp = new BigNumber("0", false);
+        BigNumber remainder = new BigNumber("0", false);
+        BigNumber oneBn = new BigNumber("1", false);
+        BigNumber zeroBn = new BigNumber("0", false);
+        boolean loop = true;
+
+        //this loop will add the magnitude of divisor to workingTemp until it goes over the magnitude of the invoker, at which point it will subtract the magnitude of divisor and calculate the remainder
+        while (loop == true) {
+
+            //if divisor can be added to magnitude of workingTemp without going over magnitude of divisor, we don't yet need to calculate remainder
+            workingTemp = workingTemp.add(divisor);
+            counter = counter.add(oneBn);
+
+            if (workingTemp.compareTo(refTemp) == 0) {
+
+                //if the magnitude of workingTemp is equal to the magnitude of the invoker, there is no remainder
+                loop = false;
+
+            } else if (workingTemp.compareTo(refTemp) == 1) {
+
+                //if the magnitude of working temp goes over the magnitude of the invoker, calculate remainder
+                //subtract the magnitude of divisor again to be used in calculating remainder
+                workingTemp = workingTemp.add(divisor.negate());
+
+                remainder = this.add(workingTemp.negate());
+                counter = counter.add(oneBn.negate());
+
+                loop = false;
+
+            }
+        }
+
+        //update magnitude of temp with value of counter in magnitude and return as quotient, return remainder as second value in pair
+        result.setFirst(counter);
+        result.setSecond(remainder);
+
+        if (this.negative == true && divisor.negative == false && !result.getFirst().equals(zeroBn) || this.negative == false && divisor.negative == true && !result.getFirst().equals(zeroBn)) {
+
+            result.getFirst().negative = true;
+
+        }
+
+        return result;
 
     }
 
@@ -567,51 +651,52 @@ public class BigNumber {
      */
     public BigNumberPair factor() {
 
-        //TODO: clean up redundant variables in this function, handle negatives and zero invoker
-
         BigNumberPair result = new BigNumberPair();
-        BigNumber twoBn = new BigNumber("2", false);
+        BigNumber zeroBn = new BigNumber("0", false);
 
-        //check if even
-        if (this.magnitude[0] % 2 == 0) {
+        //check for zero invoker, if so return 0
+        if (this.equals(zeroBn)) {
 
-            //if even, divide by 2
-            //divide will return first factor in first pair value, 0 in second because there will be no remainder
-            result = this.divide(twoBn);
-            //update second pair value to 2
-            result.setSecond(twoBn);
+            result.setFirst(zeroBn);
+            result.setSecond(zeroBn);
             return result;
 
-        } else {
+        }
 
-            //approximate length of square root of invoker (n/2) and loop through all numbers of that length or less stopping at 1 (which will always be a factor of the invoker)
-            int rootLength = (int) Math.ceil((double) this.magnitude.length / 2); //the length of the square root of the invoker
-            int maxRoot = (int) (Math.pow(10, rootLength) - 1); //the highest number of length rootLength for loop to start at
-            BigNumber mag = new BigNumber(Integer.toString(maxRoot), false);
-            int[] zeroArr = new int[1];
-            int[] oneArr = new int[1];
-            oneArr[0] = 1;
-            BigNumberPair divResult = new BigNumberPair(); //store the result of the division operation in the loop
+        //approximate length of square root of invoker (n/2) and loop through all numbers of that length or less stopping at 1 (which will always be a factor of the invoker)
+        int rootLength = (int) Math.ceil((double) this.magnitude.length / 2); //the length of the square root of the invoker
+        int maxRoot = (int) (Math.pow(10, rootLength) - 1); //the highest number of length rootLength for loop to start at
+        BigNumber mag = new BigNumber(Integer.toString(maxRoot), false); //the current potential factor being checked
+        BigNumber oneBn = new BigNumber("1", false);
+        BigNumberPair divResult = new BigNumberPair(); //store the result of the division operation in the loop
 
-            for (int i = maxRoot; i > 0; i++) {
+        System.out.println(maxRoot);
 
-                if (this.divide(mag).getSecond().magnitude == zeroArr) {
+        for (int i = maxRoot; i > 0; i--) {
 
-                    //if there is no remainder from the division, a factor is found
-                    result.setFirst(mag);
-                    result.setSecond(divResult.getFirst());
-                    return result;
+            //divide invoker by current potential factor being checked
+            divResult = this.divide(mag);
 
-                } else {
+            if (divResult.getSecond().equals(zeroBn)) {
 
-                    //this is not a factor, check next largest number
-                    mag.magnitude = add(mag.magnitude, oneArr);
+                //if there is no remainder from the division, a factor is found
+                result.setFirst(mag);
+                result.setSecond(divResult.getFirst());
 
-                }
+                return result;
+
+            } else {
+
+                //this is not a factor, check next largest number
+                mag = mag.add(oneBn.negate());
 
             }
 
         }
+
+        //if the loop does not find any factors, the number is prime
+        result.setFirst(this);
+        result.setSecond(oneBn);
 
         return result;
 

@@ -47,7 +47,7 @@ public class Main {
             switch (input) {
 
                 case "a":
-                    System.out.println("Factor 1: " + test.factor().getFirst().toString() + " Factor 2: " + test.factor().getSecond().toString() + "\n");
+                    System.out.println("Sum: " + test.add(test2).toString()  + "\n");
                     break;
 
                 case "s":

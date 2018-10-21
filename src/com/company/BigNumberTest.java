@@ -119,7 +119,7 @@ class BigNumberTest {
     void divNegatives() {
 
         for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].negate().divide(bigNumbers2[size - 1 - i]).toString();
+            bigNumberResults[i] = bigNumbers1[i].negate().divide(bigNumbers2[size - 1 - i]).getFirst().toString();
             bigIntegerResults[i] = bigIntegers1[i].negate().divide(bigIntegers2[size - 1 - i]).toString(base);
         }
 
@@ -134,7 +134,7 @@ class BigNumberTest {
     void divPositives() {
 
         for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].divide(bigNumbers2[size - 1 - i]).toString();
+            bigNumberResults[i] = bigNumbers1[i].divide(bigNumbers2[size - 1 - i]).getFirst().toString();
             bigIntegerResults[i] = bigIntegers1[i].divide(bigIntegers2[size - 1 - i]).toString(base);
         }
 
