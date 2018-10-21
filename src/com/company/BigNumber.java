@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.Arrays;
-
 /**
  * <h1>BigNumber</h1>
  * The BigNumber class implements arbitrary precision arithmetic.
@@ -153,12 +151,12 @@ public class BigNumber {
         }
 
         //signs are different, so need to find greater number and use subtraction instead.
-        int z = this.compareTo(number); //determining if operands are of equal length.
-        if (z == 1) {//operand1 is greater than operand2, so operand1 - operand2 = sum
-            return new BigNumber(subtract(operand1, operand2), this.negative);//sum is the sign of the larger number
-        } else if (z == -1) {//operand1 is less than operand2 so, operand2 - operand1 = sum
-            return new BigNumber(subtract(operand2, operand1), number.negative);//sum is the sign of the larger number
-        } else {
+        int z = findGreaterMagnitude(operand1, operand2);//determining if operands are of equal length.
+        if(z == 1){//operand1 is greater than operand2, so operand1 - operand2 = sum
+            return new BigNumber(subtract(operand1,operand2), this.negative);//sum is the sign of the larger number
+        }else if(z == -1){//operand1 is less than operand2 so, operand2 - operand1 = sum
+            return new BigNumber(subtract(operand2,operand1), number.negative);//sum is the sign of the larger number
+        }else{
             return new BigNumber("0", false);//numbers are opposite sign but equal magnitude
         }
     }
@@ -204,6 +202,26 @@ public class BigNumber {
         }
 
         return sum;
+    }
+
+    /**
+     * The same as a compareTo method. Will be changed later.
+     * @author Warren Devonshire
+     * @param p1
+     * @param p2
+     * @return
+     */
+    private int findGreaterMagnitude(int[] p1, int[] p2){
+        for(int i = p1.length - 1; i >= 0; i--){
+            if(p1[i] > p2[i]){
+                return 1;//p1 is greater than p2
+            }else if(p1[i] < p2[i]){
+                return -1;//p1 is < p2
+            }else{
+                continue;
+            }
+        }
+        return 0;//numbers are equal
     }
 
     /**
