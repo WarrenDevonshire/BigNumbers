@@ -430,7 +430,7 @@ public class BigNumber {
      */
     public BigNumber multiply(BigNumber factor) {
 
-        BigNumber result = new BigNumber("0", false);
+        BigNumber result;
         BigNumber zeroBn = new BigNumber("0", false);
         BigNumber oneBn = new BigNumber("1", false);
 
@@ -445,47 +445,10 @@ public class BigNumber {
 
         } else {
 
-            int[] product = new int[this.magnitude.length + factor.magnitude.length];
-            int[] operand1 = new int[this.magnitude.length];
-            int[] operand2 = new int[factor.magnitude.length];
-            operand1 = this.magnitude;
-            operand2 = factor.magnitude;
-            int temp = 0;
-            int carry = 0; //carry
-            int m = operand1.length;
-            int n = operand2.length;
+            int[] operand1 = this.magnitude;
+            int[] operand2 = factor.magnitude;
 
-            //step M1
-            for (int j = 0; j < n; j++) {
-
-                //check for zero multiplier, step M2
-                if (operand2[j] == 0) {
-
-                    product[j + m] = 0;
-
-                } else {
-
-                    //step M3
-                    carry = 0;
-
-                    for (int i = 0; i < m; i++) {
-
-                        //step M4
-                        temp = ((operand1[i] * operand2[j]) + product[i + j] + carry);
-                        product[i + j] = temp % base;
-                        carry = temp / base;
-
-                    }
-
-                    //step M5
-                    product[j + m] = carry;
-
-                }
-
-            }
-
-            result.magnitude = product;
-            result.normalize();
+            result = new BigNumber(multiply(operand1, operand2), false);
 
             //check if negative sign is needed base on signs of operands
             if (this.negative == true && factor.negative == false && result.equals(zeroBn) == false || this.negative == false && factor.negative == true && result.equals(zeroBn) == false) {
@@ -499,6 +462,51 @@ public class BigNumber {
         }
 
     }
+
+    private int[] multiply(int[] operand1, int[] operand2){
+        int m = operand1.length;
+        int n = operand2.length;
+        int[] product = new int[m+n];
+        int temp;
+        int carry;
+        //step M1
+        for (int j = 0; j < n; j++) {
+
+            //check for zero multiplier, step M2
+            if (operand2[j] == 0) {
+
+                product[j + m] = 0;
+
+            } else {
+
+                //step M3
+                carry = 0;
+
+                for (int i = 0; i < m; i++) {
+
+                    //step M4
+                    temp = ((operand1[i] * operand2[j]) + product[i + j] + carry);
+                    product[i + j] = temp % base;
+                    carry = temp / base;
+
+                }
+
+                //step M5
+                product[j + m] = carry;
+
+            }
+
+        }
+        return product;
+    }
+
+    //assumes that input is already normalized and that dividend in bigger than divisor
+//    private int[] divide(int[] dividend, int[] divisor){
+//        int n = divisor.length;
+//        int m = dividend.length - divisor.length;
+//
+//
+//    }
 
     /**
      * Divides the invoker by a second BigNumber using 'Algorithm D.'
