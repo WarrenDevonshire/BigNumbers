@@ -11,15 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class BigNumberTest {
-    BigNumber[] bigNumbers1;
-    BigNumber[] bigNumbers2;
-    BigInteger[] bigIntegers1;
-    BigInteger[] bigIntegers2;
-    String[] bigNumberResults;
-    String[] bigIntegerResults;
-    int size = 100;
-    int base = 10;
-    int numberSize = 50;
+    private BigNumber[] bigNumbers1;
+    private BigNumber[] bigNumbers2;
+    private BigInteger[] bigIntegers1;
+    private BigInteger[] bigIntegers2;
+    private String[] bigNumberResults;
+    private String[] bigIntegerResults;
+    private int size = 100;
+    private int base = 10;
+    private int numberSize = 50;
 
     @BeforeEach
     void setUp() {
