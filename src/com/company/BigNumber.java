@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 /**
  * <h1>BigNumber</h1>
  * The BigNumber class implements arbitrary precision arithmetic.
@@ -502,9 +504,17 @@ public class BigNumber {
 
     //assumes that input is already normalized and that dividend in bigger than divisor
 //    private int[] divide(int[] dividend, int[] divisor){
-//        int n = divisor.length;
 //        int m = dividend.length - divisor.length;
+//        int n = divisor.length;
 //
+//        int[] d = new int[1];
+//        d[0] = (base - 1) / divisor[n-1];
+//        int[] tempDividend = Arrays.copyOf(dividend, m+n);//so values of dividend parameter are unchanged during computation.
+//        tempDividend = multiply(tempDividend, d);
+//
+//        for(int j = m; j >= 0; j--){
+//
+//        }
 //
 //    }
 
