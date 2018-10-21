@@ -21,6 +21,9 @@ class BigNumberTest {
     private int base = 10;
     private int numberSize = 50;
 
+    /**
+     * @author Warren Devonshire
+     */
     @BeforeEach
     void setUp() {
         bigNumbers1 = new BigNumber[size];
@@ -46,6 +49,9 @@ class BigNumberTest {
         }
     }
 
+    /**
+     * @author Warren Devonshire
+     */
     @AfterEach
     void tearDown() {
         for (int i = 0; i < size; i++) {
@@ -56,6 +62,9 @@ class BigNumberTest {
         }
     }
 
+    /**
+     * @author Warren Devonshire
+     */
     @Test
     void addPositives() {
         for (int i = 0; i < size; i++) {
@@ -64,6 +73,9 @@ class BigNumberTest {
         }
     }
 
+    /**
+     * @author Warren Devonshire
+     */
     @Test
     void addNegatives() {
         for (int i = 0; i < size; i++) {
@@ -72,11 +84,47 @@ class BigNumberTest {
         }
     }
 
+    /**
+     * @author Warren Devonshire
+     */
     @Test
     void addOpposites() {
         for (int i = 0; i < size; i++) {
             bigNumberResults[i] = bigNumbers1[i].negate().add(bigNumbers2[size - 1 - i]).toString();
             bigIntegerResults[i] = bigIntegers1[i].negate().add(bigIntegers2[size - 1 - i]).toString(base);
+        }
+    }
+
+    /**
+     * @author Warren Devonshire
+     */
+    @Test
+    void subtractPositives() {
+        for (int i = 0; i < size; i++) {
+            bigNumberResults[i] = bigNumbers1[i].subtract(bigNumbers2[size - 1 - i]).toString();
+            bigIntegerResults[i] = bigIntegers1[i].subtract(bigIntegers2[size - 1 - i]).toString(base);
+        }
+    }
+
+    /**
+     * @author Warren Devonshire
+     */
+    @Test
+    void subtractNegatives() {
+        for (int i = 0; i < size; i++) {
+            bigNumberResults[i] = bigNumbers1[i].negate().subtract(bigNumbers2[size - 1 - i].negate()).toString();
+            bigIntegerResults[i] = bigIntegers1[i].negate().subtract(bigIntegers2[size - 1 - i].negate()).toString(base);
+        }
+    }
+
+    /**
+     * @author Warren Devonshire
+     */
+    @Test
+    void subtractOpposites() {
+        for (int i = 0; i < size; i++) {
+            bigNumberResults[i] = bigNumbers1[i].negate().subtract(bigNumbers2[size - 1 - i]).toString();
+            bigIntegerResults[i] = bigIntegers1[i].negate().subtract(bigIntegers2[size - 1 - i]).toString(base);
         }
     }
 
@@ -138,29 +186,5 @@ class BigNumberTest {
             bigIntegerResults[i] = bigIntegers1[i].divide(bigIntegers2[size - 1 - i]).toString(base);
         }
 
-    }
-
-    @Test
-    void subtractPositives() {
-        for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].subtract(bigNumbers2[size - 1 - i]).toString();
-            bigIntegerResults[i] = bigIntegers1[i].subtract(bigIntegers2[size - 1 - i]).toString(base);
-        }
-    }
-
-    @Test
-    void subtractNegatives() {
-        for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].negate().subtract(bigNumbers2[size - 1 - i].negate()).toString();
-            bigIntegerResults[i] = bigIntegers1[i].negate().subtract(bigIntegers2[size - 1 - i].negate()).toString(base);
-        }
-    }
-
-    @Test
-    void subtractOpposites() {
-        for (int i = 0; i < size; i++) {
-            bigNumberResults[i] = bigNumbers1[i].negate().subtract(bigNumbers2[size - 1 - i]).toString();
-            bigIntegerResults[i] = bigIntegers1[i].negate().subtract(bigIntegers2[size - 1 - i]).toString(base);
-        }
     }
 }

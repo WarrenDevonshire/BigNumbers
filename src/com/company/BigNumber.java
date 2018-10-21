@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.Arrays;
-
 /**
  * <h1>BigNumber</h1>
  * The BigNumber class implements arbitrary precision arithmetic.
@@ -13,15 +11,29 @@ import java.util.Arrays;
  */
 public class BigNumber {
 
-    //magnitudes have least significant digit first.
+    /**
+     * The magnitude of this BigNumber.
+     * The least significant digit is first.
+     * @author Warren Devonshire
+     */
     private int[] magnitude;
+
+    /**
+     * The base of this BigNumber.
+     * @author Warren Devonshire
+     */
     private static int base = 10; //Working in base 10
     //negative is true when sign is negative, false otherwise
     //might be changed to int sign, holding either -1, 0, or 1
+    /**
+     * The sign of this BigNumber.
+     * True when negative, false otherwise.
+     * @author Warren Devonshire
+     */
     private boolean negative;
 
     /**
-     * @param baseTenNumber
+     * @param baseTenNumber String of a signed base ten number.
      * @throws IllegalArgumentException Throws when string input is formatted incorrectly.
      * @author Warren Devonshire
      */
@@ -36,8 +48,8 @@ public class BigNumber {
     }
 
     /**
-     * @param baseTenNumber
-     * @param negative
+     * @param baseTenNumber String of a signed base ten number.
+     * @param negative Negative value for new BigNumber
      * @throws IllegalArgumentException Throws when string input is formatted incorrectly
      * @author Warren Devonshire
      */
@@ -53,8 +65,8 @@ public class BigNumber {
     }
 
     /**
-     * @param magnitude
-     * @param negative
+     * @param magnitude int[] of new BigNumber
+     * @param negative Negative value for new BigNumber, True if negative false otherwise.
      * @author Warren Devonshire
      */
     private BigNumber(int[] magnitude, boolean negative) {
@@ -165,12 +177,12 @@ public class BigNumber {
 
 
     /**
-     * Takes two in[] and adds them.
+     * Takes two int[] and adds them.
      *
      * @param operand1 The first operand.
      * @param operand2 The second operand.
      * @return int[] The sum.
-     * @author Warren Devonshire
+     * @author Algorithm by Donald Knuth, implementation by Warren Devonshire
      */
     private int[] add(int[] operand1, int[] operand2) {
         int k = 0; //k is the carry digit.
@@ -185,7 +197,13 @@ public class BigNumber {
         return sum;
     }
 
-
+    /**
+     * Subtracts number from This.
+     *
+     * @param number BigNumber to subtract from this
+     * @return The result.
+     * @author Warren Devonshire
+     */
     public BigNumber subtract(BigNumber number){
         return add(number.negate());
     }
@@ -196,7 +214,7 @@ public class BigNumber {
      * @param operand1 Operand to be subtracted from
      * @param operand2 Operand to subtract from operand1
      * @return int[] The result.
-     * @author Warren Devonshire
+     * @author Algorithm by Donald Knuth, implementation by Warren Devonshire
      */
     private int[] subtract(int[] operand1, int[] operand2) {
         int k = 0; //the borrow
@@ -211,11 +229,11 @@ public class BigNumber {
     }
 
     /**
-     * The same as a compareTo method. Will be changed later.
+     * Used to find bigger magnitude. Used in public add function.
+     * @param p1 a magnitude.
+     * @param p2 a magnitude.
+     * @return -1 if p1 < p2, 0 if p1 == p2, and +1 if p1 > p2
      * @author Warren Devonshire
-     * @param p1
-     * @param p2
-     * @return
      */
     private int findGreaterMagnitude(int[] p1, int[] p2){
         for(int i = p1.length - 1; i >= 0; i--){
@@ -260,7 +278,7 @@ public class BigNumber {
      *
      * @param number The int[] to be padded.
      * @param toSize The size padded to.
-     * @return
+     * @return int[] padded to size toSize
      * @author Warren Devonshire
      */
     private int[] normalize(int[] number, int toSize) {
@@ -502,21 +520,6 @@ public class BigNumber {
         return product;
     }
 
-    //assumes that input is already normalized and that dividend in bigger than divisor
-//    private int[] divide(int[] dividend, int[] divisor){
-//        int m = dividend.length - divisor.length;
-//        int n = divisor.length;
-//
-//        int[] d = new int[1];
-//        d[0] = (base - 1) / divisor[n-1];
-//        int[] tempDividend = Arrays.copyOf(dividend, m+n);//so values of dividend parameter are unchanged during computation.
-//        tempDividend = multiply(tempDividend, d);
-//
-//        for(int j = m; j >= 0; j--){
-//
-//        }
-//
-//    }
 
     /**
      * Divides the invoker by a second BigNumber using 'Algorithm D.'
