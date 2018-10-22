@@ -688,13 +688,13 @@ public class BigNumber {
         //approximate length of square root of invoker (n/2) and loop through all numbers of that length or less stopping at 1 (which will always be a factor of the invoker)
         int rootLength = (int) Math.ceil((double) this.magnitude.length / 2); //the length of the square root of the invoker
         int maxRoot = (int) (Math.pow(10, rootLength) - 1); //the highest number of length rootLength for loop to start at
-        BigNumber mag = new BigNumber(Integer.toString(maxRoot), false); //the current potential factor being checked
+        BigNumber mag = new BigNumber("2", false); //the current potential factor being checked
         BigNumber oneBn = new BigNumber("1", false);
         BigNumberPair divResult = new BigNumberPair(); //store the result of the division operation in the loop
 
-        System.out.println(maxRoot);
+        for (int i = 2; i <= maxRoot; i++) {
 
-        for (int i = maxRoot; i > 0; i--) {
+            System.out.println(mag.toString());
 
             //divide invoker by current potential factor being checked
             divResult = this.divide(mag);
@@ -710,7 +710,7 @@ public class BigNumber {
             } else {
 
                 //this is not a factor, check next largest number
-                mag = mag.add(oneBn.negate());
+                mag = mag.add(oneBn);
 
             }
 
