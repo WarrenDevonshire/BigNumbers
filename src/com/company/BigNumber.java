@@ -624,6 +624,11 @@ public class BigNumber {
 
         }
 
+        if(this.compareTo(divisor) < 0){
+            result.setSecond(this);
+            return result;
+        }
+
         counter.magnitude[0] = 1;
 
         //if dividing by 1, return invoker (this does not check for leading 0's)

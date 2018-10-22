@@ -63,7 +63,8 @@ public class Main {
                     break;
 
                 case "f":
-                    System.out.println("Factor 1: " + test.factor().getFirst().toString() + " Factor 2: " + test.factor().getSecond().toString() + "\n");
+                    BigNumberPair result = test.factor();
+                    System.out.println("Factor 1: " + result.getFirst().toString() + " Factor 2: " + result.getSecond().toString() + "\n");
                     break;
 
                 case "e":
