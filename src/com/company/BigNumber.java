@@ -624,7 +624,7 @@ public class BigNumber {
     }
 
     /**
-     * Returns two BigNumber prime factors of the invoker.
+     * Returns two BigNumber factors of the invoker.
      *
      * @return a pair containing the two factors of the invoker in descending order
      * @author Daniel Haluszka
@@ -651,7 +651,7 @@ public class BigNumber {
         BigNumberPair divResult = new BigNumberPair(); //store the result of the division operation in the loop
 
         for (int i = 2; i <= maxRoot; i++) {
-
+            
             //divide invoker by current potential factor being checked, check if invoker is negative and negate if so
             //we only want to divide positives here to ensure identical results for factorization of positive and negative numbers
             if (this.negative == true) {
