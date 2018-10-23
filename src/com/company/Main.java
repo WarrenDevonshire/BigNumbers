@@ -3,7 +3,7 @@ package com.company;
 import java.util.Scanner;
 
 /**
- * A simple driver program for debugging and testing the BigNumber class. Does not have input-checking.
+ * A simple driver program for debugging and testing the BigNumber class.
  *
  * @author Daniel Haluszka
  */
@@ -51,20 +51,21 @@ public class Main {
                     break;
 
                 case "s":
-                    //System.out.println(test.subtract(test2).toString() + "\n");
+                    System.out.println("Difference: " + test.subtract(test2).toString() + "\n");
                     break;
 
                 case "m":
-                    System.out.println(test.multiply(test2).toString() + "\n");
+                    System.out.println("Product: " + test.multiply(test2).toString() + "\n");
                     break;
 
                 case "d":
-                    System.out.println("Quotient: " + test.divide(test2).getFirst().toString() + " Remainder: " + test.divide(test2).getSecond().toString() + "\n");
+                    BigNumberPair resultD = test.divide(test2);
+                    System.out.println("Quotient: " + resultD.getFirst().toString() + " Remainder: " + resultD.getSecond().toString() + "\n");
                     break;
 
                 case "f":
-                    BigNumberPair result = test.factor();
-                    System.out.println("Factor 1: " + result.getFirst().toString() + " Factor 2: " + result.getSecond().toString() + "\n");
+                    BigNumberPair resultF = test.factor();
+                    System.out.println("Factor 1: " + resultF.getFirst().toString() + " Factor 2: " + resultF.getSecond().toString() + "\n");
                     break;
 
                 case "e":
@@ -75,6 +76,9 @@ public class Main {
                     System.out.println(test.compareTo(test2));
                     break;
 
+                default:
+                    System.out.println("Invalid input");
+                    break;
             }
 
             if (test.sign() != 1) {
@@ -94,9 +98,6 @@ public class Main {
 
         }
 
-
-
-
-
     }
+
 }
