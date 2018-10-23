@@ -290,6 +290,7 @@ public class BigNumber {
     }
 
     /**
+     * Returns a new BigNumber with same magnitude as this with opposite sign.
      * @return Returns new negated BigNumber with same magnitude as self.
      * @author Warren Devonshire
      */
